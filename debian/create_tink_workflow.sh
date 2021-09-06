@@ -6,18 +6,22 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 export OS_CODENAME=bullseye
-export MAC_ADDRESS=00:1d:21:58:43:5d
-export IP_ADDRESS=192.168.1.5
+export MAC_ADDRESS=52:54:00:48:6c:40
+export IP_ADDRESS=10.4.4.5
 export NETMASK=255.255.255.0
-export GATEWAY=192.168.1.1
+export GATEWAY=10.4.4.1
 export HOSTNAME=server001
 
-read -sp 'Enter new root password: ' ROOTPASSWORD
-printf "\n"
-read -sp 'Enter new user password: ' USERPASSWORD
-printf "\n"
-read -sp 'Enter new password salt: ' PASSWORDSALT
-printf "\n"
+#read -sp 'Enter new root password: ' ROOTPASSWORD
+#printf "\n"
+#read -sp 'Enter new user password: ' USERPASSWORD
+#printf "\n"
+#read -sp 'Enter new password salt: ' PASSWORDSALT
+#printf "\n"
+
+ROOTPASSWORD="abc123"
+USERPASSWORD="abc123"
+PASSWORDSALT="12345678"
 
 export UUID=$(uuidgen|tr "[:upper:]" "[:lower:]")
 export CRYPTEDROOTPASSWORD=$(printf '%s\n' "$ROOTPASSWORD" | mkpasswd --stdin --method=sha-512 --salt "$PASSWORDSALT")
@@ -30,7 +34,10 @@ echo "Creating new Tinkerbell worker environment"
 docker exec -i deploy_tink-cli_1 tink hardware push < ./$UUID.json
 rm $UUID.json
 
-docker exec -i deploy_tink-cli_1 tink template create --name $OS_CODENAME < ./$OS_CODENAME.yml | tee ./template.txt
+#exit 0
+
+#docker exec -i deploy_tink-cli_1 tink template create --name $OS_CODENAME < ./$OS_CODENAME.yml | tee ./template.txt
+docker exec -i deploy_tink-cli_1 tink template create    < ./$OS_CODENAME.yml | tee ./template.txt
 TEMPLATE_ID=$(cat ./template.txt | awk '/Created/{printf "%s", $3}' && rm ./template.txt)
 
 docker exec -i deploy_tink-cli_1 tink workflow create --hardware '{"device_1":"'$MAC_ADDRESS'"}' --template "$TEMPLATE_ID" | tee ./workflow.txt

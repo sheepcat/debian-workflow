@@ -16,21 +16,21 @@ tasks:
         image: bullseye/disk-partition:latest
         timeout: 90
         environment:
-          MIRROR_HOST: 192.168.1.2
+          MIRROR_HOST: 10.4.4.2
         volumes:
           - /statedir:/statedir
       - name: "install-root-fs"
         image: bullseye/install-root-fs:latest
         timeout: 1500
         environment:
-          BASEURL: "http://192.168.1.2/misc/osie/current"
-          PROXY_HOST: 192.168.1.2
+          BASEURL: "http://10.4.4.2:8080/misc/osie/current"
+          PROXY_HOST: 10.4.4.2
         volumes:
           - /statedir:/statedir
       - name: "cloud-init"
         image: bullseye/cloud-init:latest
         timeout: 90
         environment:
-          MIRROR_HOST: 192.168.1.2
+          MIRROR_HOST: 10.4.4.2
         volumes:
           - /statedir:/statedir

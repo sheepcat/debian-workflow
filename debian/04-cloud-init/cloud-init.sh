@@ -6,6 +6,8 @@ set -o nounset
 target="/mnt/target"
 root=$(blkid -L ROOT -o device)
 
+echo $root
+
 metadata=/metadata
 touch $metadata
 curl --connect-timeout 60 http://$MIRROR_HOST:50061/metadata > $metadata
@@ -14,14 +16,24 @@ check_required_arg "$metadata" 'metadata file' '-M'
 mkdir -p $target
 mount -t ext4 $root $target
 
+yq --help
+cat $metadata
+
 echo -e "${GREEN}#### Configuring cloud-init for Packet${NC}"
+
+mkdir -p $target/etc/cloud/cloud.cfg.d/
+touch $target/etc/cloud/cloud.cfg
+
+
 
 if [ -f $target/etc/cloud/cloud.cfg ]; then
 	echo "Cloud-init post-install - pushing data from database to worker"
 	mv $target/etc/cloud/cloud.cfg $target/etc/cloud/cloud.cfg.dpkg
 	echo -e "#cloud-config\n\n" > $target/etc/cloud/cloud.cfg
 	# yq search for cloud_cfg, reads as json, and processes it as pretty yaml
-	$(yq r -P $metadata "cloud_cfg" >> $target/etc/cloud/cloud.cfg)
+	#$(yq r -P $metadata "cloud_cfg" >> $target/etc/cloud/cloud.cfg)
+	$(yq eval '.metadata.cloud_cfg'  -P $metadata  >> $target/etc/cloud/cloud.cfg)
+	cat $target/etc/cloud/cloud.cfg
 else
 	echo "Cloud-init post-install -  default cloud.cfg does not exist!"
 fi

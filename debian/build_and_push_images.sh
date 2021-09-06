@@ -7,8 +7,8 @@ fi
 
 apt-get -qq --yes --no-install-recommends install whois debootstrap apt-cacher-ng 2>/dev/null
 
-registry='192.168.1.1'
-proxy_url='http://192.168.1.1:3142'
+registry='10.4.4.2'
+proxy_url='http://10.4.4.2:3142'
 linux='debian'
 release='bullseye'
 variant='slim'
