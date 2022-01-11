@@ -32,5 +32,6 @@ tasks:
         timeout: 90
         environment:
           MIRROR_HOST: 10.4.4.2
+          ROOT_PARTITION: /dev/sda1
         volumes:
           - /statedir:/statedir

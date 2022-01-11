@@ -28,5 +28,5 @@ docker push $registry:443/$release/disk-partition:$version
 #docker build -t $registry/$release/install-root-fs:$version 03-install-root-fs/ --build-arg REGISTRY=$registry --build-arg IMAGE=$base
 #docker push $registry/$release/install-root-fs:$version
 
-#docker build -t $registry/$release/cloud-init:$version 04-cloud-init/ --build-arg REGISTRY=$registry --build-arg IMAGE=$base
-#docker push $registry/$release/cloud-init:$version
+docker build -t $registry:443/$release/cloud-init:$version 04-cloud-init/ --build-arg REGISTRY=$registry:443 --build-arg IMAGE=$base
+docker push $registry:443/$release/cloud-init:$version

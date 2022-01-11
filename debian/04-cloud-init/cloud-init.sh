@@ -4,9 +4,9 @@ source functions.sh && init
 set -o nounset
 
 target="/mnt/target"
-root=$(blkid -L ROOT -o device)
+#root=$(blkid -L ROOT -o device)
 
-echo $root
+#echo $root
 
 metadata=/metadata
 touch $metadata
@@ -14,7 +14,8 @@ curl --connect-timeout 60 http://$MIRROR_HOST:50061/metadata > $metadata
 check_required_arg "$metadata" 'metadata file' '-M'
 
 mkdir -p $target
-mount -t ext4 $root $target
+#mount -t ext4 $root $target
+mount -t ext4 $ROOT_PARTITION $target
 
 yq --help
 cat $metadata
@@ -45,7 +46,7 @@ else
 	echo "Cloud-init post-install - cloud-init-nonet does not exist. Skipping edit"
 fi
 
-cat <<EOF >$target/etc/cloud/cloud.cfg.d/90_dpkg.cfg
+#cat <<EOF >$target/etc/cloud/cloud.cfg.d/90_dpkg.cfg
 # datasource_list: [ NoCloud, AltCloud, ConfigDrive, OpenStack, CloudStack, DigitalOcean, Ec2, MAAS, OVF, GCE, None ]
-datasource_list: [ NoCloud, None ]
-EOF
+#datasource_list: [ NoCloud, None ]
+#EOF
